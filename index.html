@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rishi Kasula | Custom Apps and Websites for Local Businesses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --card: #1a1a1a;
+      --border: #272727;
+      --blue: #4f7cff;
+      --green: #3ecf8e;
+      --purple: #9b7ff4;
+      --orange: #f97316;
+      --text: #e2e2e2;
+      --muted: #6b6b6b;
+      --subtle: #333;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 60px;
+    }
+
+    .nav-logo { font-size: 0.95rem; font-weight: 600; color: var(--text); text-decoration: none; }
+
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      color: #fff !important;
+      background: var(--blue);
+      padding: 7px 18px;
+      border-radius: 6px;
+      font-size: 0.82rem !important;
+      transition: opacity 0.15s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* HERO */
+    .hero {
+      padding: 152px 48px 100px;
+      max-width: 780px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 11px 22px;
+      border-radius: 7px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-fill { background: var(--blue); color: #fff; }
+    .btn-fill:hover { opacity: 0.84; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--subtle); }
+
+    hr { border: none; border-top: 1px solid var(--border); }
+
+    /* OFFER BANNER */
+    .offer-banner {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 48px;
+    }
+
+    .offer-inner { max-width: 960px; }
+
+    .offer-flag {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .offer-heading {
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .offer-heading .word-free {
+      color: var(--green);
+    }
+
+    .offer-subhead {
+      font-size: 0.93rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .offer-item {
+      background: var(--card);
+      padding: 26px 24px;
+      border-top: 3px solid transparent;
+    }
+
+    .offer-item.green  { border-top-color: var(--green); }
+    .offer-item.green2 { border-top-color: var(--green); }
+    .offer-item.blue   { border-top-color: var(--blue); }
+
+    .offer-item-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .offer-item-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .offer-item-value.is-free { color: var(--green); }
+
+    .offer-item-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .offer-item-sub {
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .offer-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.68;
+      padding-top: 20px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      max-width: 560px;
+    }
+
+    /* BIG OFFER STATEMENT */
+    .offer-statement {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 28px 24px;
+      margin-bottom: 28px;
+    }
+
+    .offer-statement p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .offer-statement strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .offer-statement .highlight-green {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .offer-statement .highlight-blue {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* SECTION */
+    section { padding: 88px 48px; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .section-heading {
+      font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 12px;
+      max-width: 580px;
+    }
+
+    .section-desc {
+      font-size: 0.93rem;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+
+    /* CAROUSEL */
+    .carousel-wrap { position: relative; }
+
+    .carousel {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+
+    .carousel::-webkit-scrollbar { display: none; }
+
+    .c-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      scroll-snap-align: start;
+      flex: 0 0 300px;
+      transition: border-color 0.2s;
+      border-top: 3px solid transparent;
+    }
+
+    .c-card:hover { border-color: var(--blue); }
+    .c-card.c-blue   { border-top-color: var(--blue); }
+    .c-card.c-green  { border-top-color: var(--green); }
+    .c-card.c-purple { border-top-color: var(--purple); }
+    .c-card.c-orange { border-top-color: var(--orange); }
+
+    .c-card-num {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .c-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .c-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .pill {
+      font-size: 0.67rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .carousel-btn {
+      width: 36px; height: 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, color 0.15s;
+      user-select: none;
+    }
+
+    .carousel-btn:hover { border-color: var(--blue); color: var(--text); }
+
+    .carousel-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    /* PAST WORK */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .work-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      border-top: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .work-card.wc-blue   { border-top-color: var(--blue); }
+    .work-card.wc-purple { border-top-color: var(--purple); }
+    .work-card.wc-orange { border-top-color: var(--orange); }
+
+    .work-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .wb-live    { background: rgba(62,207,142,0.12); color: var(--green); border: 1px solid rgba(62,207,142,0.25); }
+    .wb-paid    { background: rgba(79,124,255,0.12); color: var(--blue);  border: 1px solid rgba(79,124,255,0.25); }
+    .wb-built   { background: rgba(155,127,244,0.12); color: var(--purple); border: 1px solid rgba(155,127,244,0.25); }
+
+    .work-card h3 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .work-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.72;
+      margin-bottom: 18px;
+    }
+
+    .work-stat {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: inline-block;
+    }
+
+    @media (max-width: 960px) {
+      .work-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .work-grid { grid-template-columns: 1fr; }
+    }
+
+    /* PROCESS */
+    #process { background: var(--surface); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .step { background: var(--card); padding: 28px 24px; }
+
+    .step-n {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .step:nth-child(1) .step-n { color: var(--blue); }
+    .step:nth-child(2) .step-n { color: var(--purple); }
+    .step:nth-child(3) .step-n { color: var(--orange); }
+    .step:nth-child(4) .step-n { color: var(--green); }
+
+    .step h3 { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+    .step p  { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+
+    /* WHY */
+    .why-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .why-points { display: flex; flex-direction: column; gap: 28px; }
+
+    .why-point { border-top: 1px solid var(--border); padding-top: 22px; }
+
+    .why-point h4 { font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 5px; }
+    .why-point p  { font-size: 0.83rem; color: var(--muted); line-height: 1.7; }
+
+    .why-aside {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .aside-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 18px;
+    }
+
+    .aside-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      gap: 12px;
+    }
+
+    .aside-item:last-of-type { border-bottom: none; }
+    .aside-item span:first-child { color: var(--text); }
+
+    .aside-check {
+      width: 20px; height: 20px;
+      background: rgba(62,207,142,0.1);
+      border: 1px solid rgba(62,207,142,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* BOOKING */
+    #booking { background: var(--surface); }
+
+    .booking-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .booking-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 32px 36px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .booking-top h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .booking-top p { font-size: 0.83rem; color: var(--muted); max-width: 340px; line-height: 1.65; }
+
+    .booking-meta { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
+
+    .meta-line {
+      font-size: 0.77rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; flex-shrink: 0; }
+
+    .booking-cal { padding: 28px 36px 36px; }
+
+    .booking-cal iframe {
+      border-radius: 8px;
+      filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.95);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 36px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-name { font-size: 0.84rem; font-weight: 600; color: var(--text); }
+    footer p { font-size: 0.78rem; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .steps   { grid-template-columns: 1fr 1fr; }
+      .why-row { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    @media (max-width: 700px) {
+      .offer-banner { padding: 48px 20px; }
+      .offer-grid   { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 108px 20px 64px; }
+      section { padding: 60px 20px; }
+      .steps { grid-template-columns: 1fr; }
+      .booking-top { padding: 20px; }
+      .booking-cal { padding: 16px 20px 24px; }
+      .booking-meta { align-items: flex-start; }
+      footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+      .c-card { flex: 0 0 270px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Rishi Kasula</a>
+  <div class="nav-links">
+    <a href="#ideas">Ideas</a>
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#why">About</a>
+    <a href="#booking" class="nav-cta">Book a Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">App and Web Development</div>
+  <h1>Software that runs your business, not the other way around.</h1>
+  <p>
+    I build custom booking apps, ordering systems, and websites for local businesses.
+    Payments, scheduling, and customer management handled. You focus on the work.
+  </p>
+  <div class="hero-actions">
+    <a href="#booking" class="btn btn-fill">Book a Free Call</a>
+    <a href="#ideas" class="btn btn-ghost">See Ideas</a>
+  </div>
+</div>
+
+<!-- OFFER BANNER -->
+<div class="offer-banner">
+  <div class="offer-inner">
+    <div class="offer-flag">Current Offer</div>
+    <h2 class="offer-heading"><span class="word-free">FREE</span> demo of a website and/or app, built specifically for you.</h2>
+    <p class="offer-subhead">
+      Describe your business. I build a real working demo at no cost to you.
+      If you want to move forward, we talk about features and pricing then.
+    </p>
+
+    <div class="offer-statement">
+      <p>
+        <strong>FREE demo</strong> of a website and/or app customized to your requests.
+        If you decide to continue further, we will be in contact regarding cost and more features.
+        <span class="highlight-green">Service hosting will be free of cost, forever.</span>
+        Simple updates will cost very little <strong>($0 to $100).</strong>
+      </p>
+    </div>
+
+    <div class="offer-grid">
+      <div class="offer-item green">
+        <div class="offer-item-label">Custom Demo</div>
+        <div class="offer-item-value is-free">FREE</div>
+        <div class="offer-item-desc">A real working demo built around your business. Not a template or mockup.</div>
+      </div>
+      <div class="offer-item green2">
+        <div class="offer-item-label">Hosting</div>
+        <div class="offer-item-value is-free">Free Forever</div>
+        <div class="offer-item-desc">Your site or app stays live at no cost.</div>
+        <div class="offer-item-sub">Saving you hundreds of dollars every year.</div>
+      </div>
+      <div class="offer-item blue">
+        <div class="offer-item-label">Simple Updates</div>
+        <div class="offer-item-value">$0 to $100</div>
+        <div class="offer-item-desc">Text changes, menu edits, price updates. Small changes stay cheap.</div>
+      </div>
+    </div>
+
+    <p class="offer-note">
+      Nothing moves forward without your approval. Once you see the demo, if you want more features we agree on a price together before any work starts.
+    </p>
+  </div>
+</div>
+
+<hr />
+
+<!-- IDEAS CAROUSEL -->
+<section id="ideas">
+  <div class="section-label">Ideas</div>
+  <h2 class="section-heading">What could your app do?</h2>
+  <p class="section-desc">
+    Here are some examples of what I have built and what I can build for you. Scroll through to see ideas for your industry.
+  </p>
+
+  <div class="carousel-wrap">
+    <div class="carousel" id="carousel">
+
+      <div class="c-card c-blue">
+        <div class="c-card-num">01 of 06</div>
+        <h3>Pressure Washing and Exterior Cleaning</h3>
+        <p>
+          Customers pick the service, upload a photo, and pay a deposit to lock in the date.
+          You get a full schedule without chasing anyone down by phone.
+        </p>
+        <div class="pills">
+          <span class="pill">Service selector</span>
+          <span class="pill">Photo upload</span>
+          <span class="pill">Deposit payment</span>
+          <span class="pill">Job dashboard</span>
+          <span class="pill">SMS reminders</span>
+        </div>
+      </div>
+
+      <div class="c-card c-purple">
+        <div class="c-card-num">02 of 06</div>
+        <h3>Car Detailing and Auto Services</h3>
+        <p>
+          Customers pick a package, book a time, and pay through the app. For mobile details
+          they enter their address. Add-ons adjust the price automatically at checkout.
+        </p>
+        <div class="pills">
+          <span class="pill">Package selection</span>
+          <span class="pill">Time slots</span>
+          <span class="pill">Add-ons</span>
+          <span class="pill">Location input</span>
+          <span class="pill">Stripe checkout</span>
+        </div>
+      </div>
+
+      <div class="c-card c-green">
+        <div class="c-card-num">03 of 06</div>
+        <h3>Boba Shop and Cafe Ordering</h3>
+        <p>
+          Customers order and pay upfront with full customization: sugar level, ice, toppings.
+          If the order is not picked up by end of day, the app charges double automatically.
+          No wasted product, no lost revenue.
+        </p>
+        <div class="pills">
+          <span class="pill">Custom menu</span>
+          <span class="pill">Pre-payment</span>
+          <span class="pill">No-show auto-charge</span>
+          <span class="pill">Pickup scheduling</span>
+          <span class="pill">Order queue</span>
+        </div>
+      </div>
+
+      <div class="c-card c-orange">
+        <div class="c-card-num">04 of 06</div>
+        <h3>Lawn Care and Landscaping</h3>
+        <p>
+          Customers book recurring or one-time service. Billing runs automatically after each visit.
+          Digital job reports with photos go straight to the client when you finish.
+        </p>
+        <div class="pills">
+          <span class="pill">Recurring plans</span>
+          <span class="pill">Auto-billing</span>
+          <span class="pill">Photo reports</span>
+          <span class="pill">Client portal</span>
+        </div>
+      </div>
+
+      <div class="c-card c-blue">
+        <div class="c-card-num">05 of 06</div>
+        <h3>Salon, Barber, and Beauty</h3>
+        <p>
+          Book with a specific stylist, see real prices, and pay a deposit to hold the slot.
+          Late cancellations forfeit the deposit automatically. Works for one person or a full shop.
+        </p>
+        <div class="pills">
+          <span class="pill">Stylist selection</span>
+          <span class="pill">Deposit hold</span>
+          <span class="pill">Cancellation policy</span>
+          <span class="pill">Staff calendars</span>
+        </div>
+      </div>
+
+      <div class="c-card c-purple">
+        <div class="c-card-num">06 of 06</div>
+        <h3>Food Truck and Pop-Up</h3>
+        <p>
+          Customers pre-order with a pickup window so you know your revenue before you even open.
+          Live location, daily menu updates, and push notifications when orders are ready.
+        </p>
+        <div class="pills">
+          <span class="pill">Pre-order system</span>
+          <span class="pill">Live location</span>
+          <span class="pill">Pickup windows</span>
+          <span class="pill">Push notifications</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prev" aria-label="Previous">&#8592;</button>
+      <button class="carousel-btn" id="next" aria-label="Next">&#8594;</button>
+      <span class="carousel-hint">Scroll or use arrows</span>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- PAST WORK -->
+<section id="work">
+  <div class="section-label">Past Work</div>
+  <h2 class="section-heading">Real projects, real users</h2>
+  <p class="section-desc">
+    Not mockups. These shipped. Here is some of what I have built.
+  </p>
+
+  <div class="work-grid">
+
+    <div class="work-card wc-blue">
+      <div class="work-badge wb-live">Live App</div>
+      <h3>Teacher Meter</h3>
+      <p>
+        A mobile app for Bay Area students to evaluate course rigor and pull their StudentVUE grades into one place.
+        Built for real users solving a real problem at local high schools. Still live and in use.
+      </p>
+      <div class="pills" style="margin-bottom: 16px;">
+        <span class="pill">Mobile Dev</span>
+        <span class="pill">StudentVUE API</span>
+        <span class="pill">Backend</span>
+        <span class="pill">UI / UX</span>
+      </div>
+      <span class="work-stat">Active users in the Bay Area</span>
+    </div>
+
+    <div class="work-card wc-purple">
+      <div class="work-badge wb-paid">Paid Commission</div>
+      <h3>Client App</h3>
+      <p>
+        Contracted to build a production app for a client. Delivered a professional, fully functional product.
+        Earned $500 upfront and ongoing royalties of $0.99 per sale. Details are confidential.
+      </p>
+      <div class="pills" style="margin-bottom: 16px;">
+        <span class="pill">Client Work</span>
+        <span class="pill">Production Ready</span>
+        <span class="pill">Royalty Model</span>
+      </div>
+      <span class="work-stat">$500 upfront + $0.99/sale royalties</span>
+    </div>
+
+    <div class="work-card wc-orange">
+      <div class="work-badge wb-built">Hardware + iOS</div>
+      <h3>Smart Slide Lock</h3>
+      <p>
+        Designed and built a custom electronic locking system for a sliding door, then wrote an iOS app to control it remotely.
+        Combines embedded hardware with a native mobile interface.
+      </p>
+      <div class="pills" style="margin-bottom: 16px;">
+        <span class="pill">iOS App</span>
+        <span class="pill">Embedded Systems</span>
+        <span class="pill">Remote Control</span>
+        <span class="pill">Hardware Build</span>
+      </div>
+      <span class="work-stat">Hardware + software, fully integrated</span>
+    </div>
+
+  </div>
+</section>
+
+<hr />
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-heading">Four steps, no guesswork</h2>
+  <p class="section-desc">You know what is happening at every stage and nothing starts without your approval.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">01</div>
+      <h3>Discovery Call</h3>
+      <p>We talk through how your business works, what is currently a headache, and what you want customers to be able to do.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <h3>Blueprint and Quote</h3>
+      <p>I send a written plan with exactly what gets built and what it costs. You approve it before I write a single line of code.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <h3>Build</h3>
+      <p>Regular check-ins as I build. You see real progress and can give feedback while there is still time to adjust.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <h3>Launch and Support</h3>
+      <p>Your app goes live and I walk you through it. I stay reachable for questions, fixes, and future additions.</p>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- WHY -->
+<section id="why">
+  <div class="why-row">
+    <div>
+      <div class="section-label">Why Work With Me</div>
+      <h2 class="section-heading">You deal with one person, start to finish</h2>
+      <p class="section-desc" style="margin-bottom: 36px;">
+        Most dev shops hand you off after the first call. I design, build, and deliver the whole thing myself.
+        If something needs fixing, you reach me directly.
+      </p>
+      <div class="why-points">
+        <div class="why-point">
+          <h4>You talk to the developer</h4>
+          <p>No account managers, no middlemen. I am the one writing your code and answering your messages.</p>
+        </div>
+        <div class="why-point">
+          <h4>Payments that actually work</h4>
+          <p>Stripe is built in from the start. Deposits, subscriptions, automatic charges, refunds. It works and it is secure.</p>
+        </div>
+        <div class="why-point">
+          <h4>Built for phones first</h4>
+          <p>Your customers book from their phone. I design for mobile from the ground up, not as an afterthought.</p>
+        </div>
+        <div class="why-point">
+          <h4>Support after you launch</h4>
+          <p>Your business will change. I offer updates and additions at a reasonable price so your app keeps up.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-aside">
+      <div class="aside-title">What is included</div>
+      <div class="aside-item">
+        <span>Custom booking or ordering system</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>Payment integration via Stripe</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>SMS and email notifications</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>Admin dashboard</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>Mobile-responsive design</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>Launch walkthrough and support</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>Hosting included, free forever</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div class="aside-item">
+        <span>No templates, no page builders</span>
+        <span class="aside-check">&#10003;</span>
+      </div>
+      <div style="margin-top: 24px;">
+        <a href="#booking" class="btn btn-fill" style="display:block; text-align:center;">Schedule a Free Call</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-label">Get Started</div>
+  <h2 class="section-heading">Book a free 30-minute call</h2>
+  <p class="section-desc">
+    Tell me about your business. I will tell you what I can build and what it would cost.
+    No sales pitch, no pressure.
+  </p>
+
+  <div class="booking-card">
+    <div class="booking-top">
+      <div>
+        <h3>Schedule Your Consultation</h3>
+        <p>Pick any open time. We will talk through your idea and I will answer whatever questions you have.</p>
+      </div>
+      <div class="booking-meta">
+        <div class="meta-line"><span class="meta-dot"></span> Free and no commitment</div>
+        <div class="meta-line">30 minutes via video call</div>
+        <div class="meta-line">Usually available within a week</div>
+      </div>
+    </div>
+    <div class="booking-cal">
+      <iframe
+        src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0UwoB6HOCwpp_8PbRV32_Kmjk8XkkokhOZBH0v6A_2MR-FlBvQa9R5kMAyqliAHTOutdMK1M8d?gv=true"
+        width="100%"
+        height="640"
+        frameborder="0">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-name">Rishi Kasula</span>
+  <p>Custom apps and websites for local businesses. &copy; 2026</p>
+</footer>
+
+<script>
+  const carousel = document.getElementById('carousel');
+  const prev     = document.getElementById('prev');
+  const next     = document.getElementById('next');
+  const cardW    = () => carousel.querySelector('.c-card').offsetWidth + 16;
+
+  prev.addEventListener('click', () => carousel.scrollBy({ left: -cardW(), behavior: 'smooth' }));
+  next.addEventListener('click', () => carousel.scrollBy({ left:  cardW(), behavior: 'smooth' }));
+</script>
+
+</body>
+</html>
