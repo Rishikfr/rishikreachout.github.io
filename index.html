@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rishi Kasula | Custom Apps and Websites for Local Businesses</title>
+  <title>Rishik Kasula | Custom Apps and Websites for Local Businesses</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,6 +33,23 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Full-page background canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.14;
+      pointer-events: none;
+    }
+
+    /* Centering container */
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
     /* NAV */
     nav {
       position: fixed;
@@ -43,40 +60,124 @@
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 48px;
+      justify-content: center;
       height: 60px;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      width: 100%;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .nav-logo { font-size: 0.95rem; font-weight: 600; color: var(--text); text-decoration: none; }
 
-    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
 
-    .nav-links a {
+    .nav-tabs {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 0;
+    }
+
+    .nav-tab {
+      position: relative;
+      z-index: 10;
+    }
+
+    .nav-tab a {
+      display: block;
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      mix-blend-mode: difference;
       transition: color 0.15s;
+      cursor: pointer;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-cursor {
+      position: absolute;
+      z-index: 0;
+      top: 3px;
+      height: calc(100% - 6px);
+      border-radius: 999px;
+      background: #e2e2e2;
+      pointer-events: none;
+      transition: left 0.22s cubic-bezier(0.4,0,0.2,1),
+                  width 0.22s cubic-bezier(0.4,0,0.2,1),
+                  opacity 0.15s;
+    }
 
     .nav-cta {
-      color: #fff !important;
-      background: var(--blue);
-      padding: 7px 18px;
-      border-radius: 6px;
-      font-size: 0.82rem !important;
-      transition: opacity 0.15s !important;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #18181b;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .nav-cta:hover { opacity: 0.85; }
+    .nav-cta .btn-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+      opacity: 0.45;
+      filter: blur(8px);
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .nav-cta:hover .btn-grad { opacity: 0.85; }
+
+    .nav-cta .btn-fill-bg { display: none; }
+
+    .nav-cta .btn-label {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 16px;
+    }
 
     /* HERO */
+    .hero-wrap {
+      position: relative;
+      overflow: visible;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .hero {
-      padding: 152px 48px 100px;
-      max-width: 780px;
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px 80px;
+      max-width: 1200px;
+      width: 100%;
     }
 
     .hero-eyebrow {
@@ -105,56 +206,135 @@
       margin-bottom: 36px;
     }
 
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
+    /* Colorful glow button */
+    .btn-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #18181b;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* Gradient glow layer - indigo/purple/pink blurred behind content */
+    .btn-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+      opacity: 0.4;
+      filter: blur(10px);
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .btn-wrap:hover .btn-grad { opacity: 0.85; }
+
+    /* Not used in new style, hidden */
+    .btn-fill-bg { display: none; }
+
+    /* Text layer */
     .btn {
-      display: inline-block;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       text-decoration: none;
       font-size: 0.875rem;
       font-weight: 600;
-      padding: 11px 22px;
-      border-radius: 7px;
-      transition: opacity 0.15s;
-    }
-
-    .btn-fill { background: var(--blue); color: #fff; }
-    .btn-fill:hover { opacity: 0.84; }
-
-    .btn-ghost {
+      padding: 10px 24px;
+      color: #fff;
       background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .btn-ghost:hover { color: var(--text); border-color: var(--subtle); }
+    .btn-ghost-text { color: rgba(220,220,220,0.85); }
+    .btn-wrap:hover .btn-ghost-text { color: #fff; }
 
     hr { border: none; border-top: 1px solid var(--border); }
 
     /* OFFER BANNER */
     .offer-banner {
-      background: var(--surface);
+      background: rgba(20,20,20,0.72);
+      backdrop-filter: blur(6px);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 60px 48px;
+      display: flex;
+      justify-content: center;
     }
 
-    .offer-inner { max-width: 960px; }
+    .offer-inner { max-width: 1200px; width: 100%; }
 
+    /* Pricing card */
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(79,124,255,0.3) 0%, transparent 60%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .pricing-left {
+      padding: 36px 36px;
+      flex: 0 0 45%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pricing-right {
+      padding: 36px 36px;
+      flex: 1;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Badge */
     .offer-flag {
-      display: inline-block;
-      background: var(--blue);
-      color: #fff;
-      font-size: 0.68rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(79,124,255,0.1);
+      color: var(--blue);
+      border: 1px solid rgba(79,124,255,0.25);
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 4px 10px;
-      border-radius: 4px;
+      border-radius: 999px;
       margin-bottom: 20px;
+      width: fit-content;
     }
 
     .offer-heading {
-      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      font-size: clamp(1.4rem, 2.4vw, 2rem);
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.15;
@@ -162,113 +342,255 @@
       margin-bottom: 10px;
     }
 
-    .offer-heading .word-free {
-      color: var(--green);
-    }
+    .offer-heading .word-free { color: var(--green); }
 
     .offer-subhead {
-      font-size: 0.93rem;
+      font-size: 0.88rem;
       color: var(--muted);
-      max-width: 540px;
-      line-height: 1.7;
-      margin-bottom: 36px;
+      line-height: 1.72;
+      margin-bottom: 24px;
     }
 
-    .offer-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 0;
-    }
-
-    .offer-item {
-      background: var(--card);
-      padding: 26px 24px;
-      border-top: 3px solid transparent;
-    }
-
-    .offer-item.green  { border-top-color: var(--green); }
-    .offer-item.green2 { border-top-color: var(--green); }
-    .offer-item.blue   { border-top-color: var(--blue); }
-
-    .offer-item-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .offer-item-value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .offer-item-value.is-free { color: var(--green); }
-
-    .offer-item-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.62;
-    }
-
-    .offer-item-sub {
-      font-size: 0.72rem;
-      color: var(--green);
-      font-weight: 600;
-      margin-top: 6px;
-    }
-
-    .offer-note {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.68;
-      padding-top: 20px;
-      margin-top: 20px;
-      border-top: 1px solid var(--border);
-      max-width: 560px;
-    }
-
-    /* BIG OFFER STATEMENT */
-    .offer-statement {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 28px 24px;
+    /* Price row */
+    .offer-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
       margin-bottom: 28px;
     }
 
-    .offer-statement p {
+    .offer-price-main {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .offer-price-original {
       font-size: 1rem;
-      line-height: 1.75;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .offer-discount-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(62,207,142,0.1);
+      border: 1px solid rgba(62,207,142,0.3);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    /* Benefits */
+    .offer-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .offer-benefit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.87rem;
       color: var(--text);
     }
 
-    .offer-statement strong {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .offer-statement .highlight-green {
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    .offer-statement .highlight-blue {
+    .offer-benefit-icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(79,124,255,0.1);
+      border: 1px solid rgba(79,124,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
       color: var(--blue);
+      font-size: 0.6rem;
+    }
+
+    .offer-card-actions {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .offer-card-actions .btn-wrap,
+    .offer-card-actions .btn-outline {
+      width: 100%;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: rgba(220,220,220,0.85);
+      background: transparent;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-outline:hover { border-color: var(--subtle); color: #fff; }
+
+    /* Features list */
+    .offer-features-title {
+      font-size: 0.75rem;
       font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 20px;
+    }
+
+    .offer-features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .offer-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.87rem;
+      color: var(--text);
+    }
+
+    .offer-feature-dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(62,207,142,0.1);
+      border: 1px solid rgba(62,207,142,0.25);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--green);
+      font-size: 0.6rem;
+    }
+
+    /* Testimonial */
+    .offer-sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 4px 0 24px;
+    }
+
+    .offer-testimonial-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      min-height: 132px;
+    }
+
+    .offer-testimonial {
+      position: absolute;
+      inset: 0;
+      padding: 18px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+    }
+
+    .offer-testimonial.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .offer-testimonial-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .offer-testimonial-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .offer-testimonial-name {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .offer-testimonial-role {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .offer-testimonial-stars {
+      margin-left: auto;
+      display: flex;
+      gap: 1px;
+      color: var(--blue);
+      font-size: 0.65rem;
+    }
+
+    .offer-testimonial-text {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .offer-testimonial-dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 12px;
+    }
+
+    .offer-testimonial-dot {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(79,124,255,0.25);
+      transition: width 0.25s, background 0.25s;
+      width: 6px;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .offer-testimonial-dot.active {
+      width: 16px;
+      background: var(--blue);
+    }
+
+    @media (max-width: 760px) {
+      .pricing-card { flex-direction: column; }
+      .pricing-right { border-left: none; border-top: 1px solid var(--border); }
+      .pricing-left, .pricing-right { padding: 28px 24px; }
     }
 
     /* SECTION */
-    section { padding: 88px 48px; }
+    section {
+      padding: 88px 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    section > .section-inner { width: 100%; }
 
     .section-label {
       font-size: 0.72rem;
@@ -298,58 +620,165 @@
     }
 
     /* CAROUSEL */
-    .carousel-wrap { position: relative; }
+    .carousel-wrap {
+      position: relative;
+    }
 
     .carousel {
       display: flex;
-      gap: 16px;
+      gap: 20px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding-bottom: 4px;
+      padding-bottom: 8px;
     }
 
     .carousel::-webkit-scrollbar { display: none; }
 
+    /* New offer-style cards */
     .c-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 28px 24px;
-      scroll-snap-align: start;
       flex: 0 0 300px;
-      transition: border-color 0.2s;
-      border-top: 3px solid transparent;
+      height: 380px;
+      border-radius: 16px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      position: relative;
+      text-decoration: none;
+      display: block;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid var(--border);
     }
 
-    .c-card:hover { border-color: var(--blue); }
-    .c-card.c-blue   { border-top-color: var(--blue); }
-    .c-card.c-green  { border-top-color: var(--green); }
-    .c-card.c-purple { border-top-color: var(--purple); }
-    .c-card.c-orange { border-top-color: var(--orange); }
+    .c-card:hover { transform: translateY(-8px); }
 
-    .c-card-num {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+    .c-card-image {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      transition: transform 0.5s ease;
+      overflow: hidden;
+    }
+
+    .c-card:hover .c-card-image { transform: scale(1.08); }
+
+    .c-card-body {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50%;
+      background: var(--card);
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .c-card-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 5px;
+    }
+
+    .c-card-tag-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .c-card h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: #fff;
-      margin-bottom: 10px;
+      line-height: 1.25;
+      margin-bottom: 4px;
     }
 
     .c-card p {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 18px;
+      line-height: 1.55;
     }
+
+    .c-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .c-card-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .c-card-brand-logo {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .c-card-brand-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .c-card-arrow {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      transition: transform 0.3s, background 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    .c-card:hover .c-card-arrow {
+      transform: rotate(-45deg);
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    /* Carousel scroll buttons */
+    .carousel-btn {
+      position: absolute;
+      top: 38%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(13,13,13,0.6);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s, background 0.2s, border-color 0.2s;
+      user-select: none;
+    }
+
+    .carousel-btn#prev { left: -16px; }
+    .carousel-btn#next { right: -16px; }
+
+    .carousel-wrap:hover .carousel-btn { opacity: 1; }
+    .carousel-btn:hover { background: var(--card); border-color: var(--blue); color: #fff; }
 
     .pills { display: flex; flex-wrap: wrap; gap: 5px; }
 
@@ -363,34 +792,6 @@
       border-radius: 4px;
     }
 
-    .carousel-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .carousel-btn {
-      width: 36px; height: 36px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--muted);
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.15s, color 0.15s;
-      user-select: none;
-    }
-
-    .carousel-btn:hover { border-color: var(--blue); color: var(--text); }
-
-    .carousel-hint {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-left: 4px;
-    }
-
     /* PAST WORK */
     .work-grid {
       display: grid;
@@ -400,17 +801,65 @@
 
     .work-card {
       background: var(--card);
-      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 28px 24px;
-      border-top: 3px solid transparent;
       position: relative;
       overflow: hidden;
+      /* base border - overridden by spotlight border via ::before */
+      border: 1px solid var(--border);
+      border-top: 3px solid transparent;
+      touch-action: none;
     }
 
-    .work-card.wc-blue   { border-top-color: var(--blue); }
-    .work-card.wc-purple { border-top-color: var(--purple); }
-    .work-card.wc-orange { border-top-color: var(--orange); }
+    /* Spotlight glow layer inside card */
+    .work-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.4s;
+      background: radial-gradient(
+        320px 320px at var(--mx, 50%) var(--my, 50%),
+        var(--spot-color, rgba(79,124,255,0.12)) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .work-card:hover::after { opacity: 1; }
+
+    /* Border spotlight */
+    .work-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(
+        280px 280px at var(--mx, 50%) var(--my, 50%),
+        var(--spot-border, rgba(79,124,255,0.5)) 0%,
+        transparent 70%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .work-card:hover::before { opacity: 1; }
+
+    /* Keep card content above glow layers */
+    .work-card > * { position: relative; z-index: 1; }
+
+    .work-card.wc-blue   { border-top-color: var(--blue);   --spot-color: rgba(79,124,255,0.13);  --spot-border: rgba(79,124,255,0.55); }
+    .work-card.wc-purple { border-top-color: var(--purple); --spot-color: rgba(155,127,244,0.13); --spot-border: rgba(155,127,244,0.55); }
+    .work-card.wc-orange { border-top-color: var(--orange); --spot-color: rgba(249,115,22,0.13);  --spot-border: rgba(249,115,22,0.55); }
 
     .work-badge {
       display: inline-block;
@@ -462,7 +911,7 @@
     }
 
     /* PROCESS */
-    #process { background: var(--surface); }
+    #process { background: rgba(20,20,20,0.72); backdrop-filter: blur(6px); }
 
     .steps {
       display: grid;
@@ -547,8 +996,440 @@
       flex-shrink: 0;
     }
 
+    /* OWNER */
+    .owner-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+    }
+
+    .owner-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(79,124,255,0.3) 0%, transparent 60%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .owner-left {
+      padding: 36px;
+      flex: 0 0 42%;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .owner-right {
+      padding: 36px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .owner-avatar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .owner-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .owner-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+    }
+
+    .owner-role {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .owner-bio {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+
+    .owner-sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 20px;
+    }
+
+    /* Projects */
+    .owner-projects-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .owner-projects {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .owner-project {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-decoration: none;
+      transition: border-color 0.18s, background 0.18s;
+      cursor: pointer;
+    }
+
+    .owner-project:hover {
+      border-color: var(--blue);
+      background: rgba(79,124,255,0.05);
+    }
+
+    .owner-project-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .op-icon-blue   { background: rgba(79,124,255,0.12); border: 1px solid rgba(79,124,255,0.2); }
+    .op-icon-purple { background: rgba(155,127,244,0.12); border: 1px solid rgba(155,127,244,0.2); }
+    .op-icon-green  { background: rgba(62,207,142,0.12); border: 1px solid rgba(62,207,142,0.2); }
+
+    .owner-project-info { flex: 1; min-width: 0; }
+
+    .owner-project-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .owner-project-proud {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(62,207,142,0.1);
+      border: 1px solid rgba(62,207,142,0.25);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .owner-project-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .owner-project-arrow {
+      color: var(--muted);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .owner-project:hover .owner-project-arrow {
+      color: var(--blue);
+      transform: translateX(3px);
+    }
+
+    /* Stats row */
+    .owner-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: auto;
+    }
+
+    .owner-stat {
+      background: var(--surface);
+      padding: 16px 14px;
+      text-align: center;
+    }
+
+    .owner-stat-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .owner-stat-val.blue   { color: var(--blue); }
+    .owner-stat-val.green  { color: var(--green); }
+    .owner-stat-val.purple { color: var(--purple); }
+
+    .owner-stat-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 760px) {
+      .owner-card { flex-direction: column; }
+      .owner-left { border-right: none; border-bottom: 1px solid var(--border); padding: 28px 24px; flex: none; }
+      .owner-right { padding: 28px 24px; }
+      .owner-stats { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* INTAKE FORM */
+    #intake { background: rgba(20,20,20,0.72); backdrop-filter: blur(6px); }
+
+    .intake-wrap { max-width: 540px; margin: 0 auto; }
+
+    /* Progress */
+    .intake-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .intake-progress-track {
+      position: absolute;
+      top: 7px;
+      left: 0; right: 0;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .intake-progress-fill {
+      height: 100%;
+      background: var(--blue);
+      transition: width 0.3s ease;
+    }
+
+    .intake-step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+      cursor: default;
+    }
+
+    .intake-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s, box-shadow 0.3s;
+      flex-shrink: 0;
+    }
+
+    .intake-dot.active {
+      background: var(--blue);
+      box-shadow: 0 0 0 4px rgba(79,124,255,0.2);
+    }
+
+    .intake-dot.done { background: var(--blue); }
+
+    .intake-step-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .intake-step-label.active { color: var(--blue); }
+
+    /* Card */
+    .intake-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .intake-card-body {
+      padding: 32px 32px 0;
+      min-height: 280px;
+    }
+
+    .intake-step-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .intake-step-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* Slide animation */
+    .intake-panel {
+      display: none;
+      animation: intakeSlideIn 0.25s ease;
+    }
+
+    .intake-panel.visible { display: block; }
+
+    @keyframes intakeSlideIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Fields */
+    .intake-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .intake-field label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .intake-field input,
+    .intake-field select,
+    .intake-field textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.87rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+
+    .intake-field input::placeholder,
+    .intake-field textarea::placeholder { color: var(--muted); }
+
+    .intake-field input:focus,
+    .intake-field select:focus,
+    .intake-field textarea:focus { border-color: var(--blue); }
+
+    .intake-field select option { background: var(--card); }
+    .intake-field textarea { resize: vertical; min-height: 90px; }
+
+    /* Footer nav */
+    .intake-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px 28px;
+      margin-top: 8px;
+    }
+
+    .intake-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, background 0.15s;
+    }
+
+    .intake-btn-back {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .intake-btn-back:hover { color: var(--text); border-color: var(--subtle); }
+    .intake-btn-back:disabled { opacity: 0; pointer-events: none; }
+
+    .intake-btn-next {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .intake-btn-next:hover { opacity: 0.84; }
+    .intake-btn-next:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .intake-step-counter {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Success */
+    .intake-success {
+      display: none;
+      text-align: center;
+      padding: 52px 32px;
+    }
+
+    .intake-success-icon {
+      width: 48px; height: 48px;
+      background: rgba(62,207,142,0.12);
+      border: 1px solid rgba(62,207,142,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      color: var(--green);
+      margin: 0 auto 16px;
+    }
+
+    .intake-success h4 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .intake-success p  { font-size: 0.83rem; color: var(--muted); }
+
     /* BOOKING */
-    #booking { background: var(--surface); }
+    #booking { background: rgba(20,20,20,0.72); backdrop-filter: blur(6px); }
 
     .booking-card {
       background: var(--card);
@@ -565,6 +1446,18 @@
       gap: 20px;
       padding: 32px 36px 24px;
       border-bottom: 1px solid var(--border);
+    }
+
+    .booking-platform-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
     }
 
     .booking-top h3 {
@@ -600,6 +1493,15 @@
     footer {
       padding: 36px 48px;
       border-top: 1px solid var(--border);
+      background: rgba(20,20,20,0.72);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -622,33 +1524,49 @@
     }
 
     @media (max-width: 640px) {
-      nav { padding: 0 20px; }
+      .nav-inner { padding: 0 20px; }
       .nav-links a:not(.nav-cta) { display: none; }
       .hero { padding: 108px 20px 64px; }
+      .offer-banner { padding: 48px 20px; }
       section { padding: 60px 20px; }
       .steps { grid-template-columns: 1fr; }
       .booking-top { padding: 20px; }
       .booking-cal { padding: 16px 20px 24px; }
       .booking-meta { align-items: flex-start; }
-      footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+      footer { padding: 24px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
       .c-card { flex: 0 0 270px; }
     }
   </style>
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <nav>
-  <a class="nav-logo" href="#">Rishi Kasula</a>
+  <div class="nav-inner">
+  <a class="nav-logo" href="#">Rishik Kasula</a>
   <div class="nav-links">
-    <a href="#ideas">Ideas</a>
-    <a href="#work">Work</a>
-    <a href="#process">Process</a>
-    <a href="#why">About</a>
-    <a href="#booking" class="nav-cta">Book a Call</a>
+    <ul class="nav-tabs" id="navTabs">
+      <div class="nav-cursor" id="navCursor"></div>
+      <li class="nav-tab"><a href="#ideas">Ideas</a></li>
+      <li class="nav-tab"><a href="#work">Work</a></li>
+      <li class="nav-tab"><a href="#process">Process</a></li>
+      <li class="nav-tab"><a href="#why">About</a></li>
+      <li class="nav-tab"><a href="#team">Team</a></li>
+      <li class="nav-tab"><a href="#intake">Contact</a></li>
+    </ul>
+    <a href="#booking" class="nav-cta">
+      <span class="btn-grad"></span>
+      <span class="btn-fill-bg"></span>
+      <span class="btn-label">Book a Call</span>
+    </a>
+  </div>
   </div>
 </nav>
 
 <!-- HERO -->
+<div class="hero-wrap">
 <div class="hero">
   <div class="hero-eyebrow">App and Web Development</div>
   <h1>Software that runs your business, not the other way around.</h1>
@@ -657,176 +1575,275 @@
     Payments, scheduling, and customer management handled. You focus on the work.
   </p>
   <div class="hero-actions">
-    <a href="#booking" class="btn btn-fill">Book a Free Call</a>
-    <a href="#ideas" class="btn btn-ghost">See Ideas</a>
+    <a href="#booking" class="btn-wrap" id="btnFill">
+      <span class="btn-grad"></span>
+      <span class="btn-fill-bg"></span>
+      <span class="btn">Book a Free Call</span>
+    </a>
+    <a href="#ideas" class="btn-wrap" id="btnGhost">
+      <span class="btn-grad"></span>
+      <span class="btn-fill-bg"></span>
+      <span class="btn btn-ghost-text">See Ideas</span>
+    </a>
   </div>
+</div>
 </div>
 
 <!-- OFFER BANNER -->
 <div class="offer-banner">
   <div class="offer-inner">
-    <div class="offer-flag">Current Offer</div>
-    <h2 class="offer-heading"><span class="word-free">FREE</span> demo of a website and/or app, built specifically for you.</h2>
-    <p class="offer-subhead">
-      Describe your business. I build a real working demo at no cost to you.
-      If you want to move forward, we talk about features and pricing then.
-    </p>
+    <div class="pricing-card">
 
-    <div class="offer-statement">
-      <p>
-        <strong>FREE demo</strong> of a website and/or app customized to your requests.
-        If you decide to continue further, we will be in contact regarding cost and more features.
-        <span class="highlight-green">Service hosting will be free of cost, forever.</span>
-        Simple updates will cost very little <strong>($0 to $100).</strong>
-      </p>
+      <!-- LEFT: Pricing details -->
+      <div class="pricing-left">
+        <div class="offer-flag">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Current Offer
+        </div>
+
+        <h2 class="offer-heading"><span class="word-free">FREE</span> Demo,<br>Built for You</h2>
+        <p class="offer-subhead">
+          Describe your business. I build a real working demo at no cost.
+          If you want to move forward, we talk features and pricing after.
+        </p>
+
+        <div class="offer-price-row">
+          <span class="offer-price-main">FREE</span>
+          <span class="offer-price-original">$500+</span>
+          <span class="offer-discount-badge">Save 100%</span>
+        </div>
+
+        <div class="offer-benefits">
+          <div class="offer-benefit">
+            <div class="offer-benefit-icon">&#9679;</div>
+            <span>Real working demo built around your business</span>
+          </div>
+          <div class="offer-benefit">
+            <div class="offer-benefit-icon">&#9679;</div>
+            <span>Hosting free forever, no monthly fees<br><small style="color:var(--muted);font-size:0.72em;">Custom domain purchased separately by you</small></span>
+          </div>
+          <div class="offer-benefit">
+            <div class="offer-benefit-icon">&#9679;</div>
+            <span>Simple updates from $0 to $100</span>
+          </div>
+        </div>
+
+        <div class="offer-card-actions">
+          <a href="#booking" class="btn-wrap" style="width:100%; justify-content:center;">
+            <span class="btn-grad"></span>
+            <span class="btn-fill-bg"></span>
+            <span class="btn" style="width:100%; justify-content:center;">
+              Book a Free Call
+              <svg style="margin-left:auto;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a href="#ideas" class="btn-outline">See What I Can Build</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: Features + testimonials -->
+      <div class="pricing-right">
+        <div class="offer-features-title">Features You Could Build In</div>
+
+        <div class="offer-features-list">
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Custom booking or ordering system</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Payment integration via Stripe</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>SMS and email notifications</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Admin dashboard</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Mobile-responsive design</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Launch walkthrough and support</span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>Hosting included, free forever <span style="color:var(--muted);font-size:0.85em;">(custom domain purchased separately by you)</span></span></div>
+          <div class="offer-feature"><div class="offer-feature-dot">&#10003;</div><span>No templates, no page builders</span></div>
+        </div>
+
+        <hr class="offer-sep" />
+
+        <!-- Testimonials -->
+        <div class="offer-testimonial-wrap" id="testimonialWrap">
+          <div class="offer-testimonial active" id="t-0">
+            <div class="offer-testimonial-top">
+              <div class="offer-testimonial-avatar">JM</div>
+              <div>
+                <div class="offer-testimonial-name">James M.</div>
+                <div class="offer-testimonial-role">Mobile Detailing Owner</div>
+              </div>
+              <div class="offer-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="offer-testimonial-text">"Had a fully working booking app with Stripe payments in under two weeks. Customers can book and pay upfront. No more chasing people down."</p>
+          </div>
+          <div class="offer-testimonial" id="t-1">
+            <div class="offer-testimonial-top">
+              <div class="offer-testimonial-avatar">SK</div>
+              <div>
+                <div class="offer-testimonial-name">Sarah K.</div>
+                <div class="offer-testimonial-role">Boba Shop Owner</div>
+              </div>
+              <div class="offer-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="offer-testimonial-text">"The demo he built before our call was already 80% of what I needed. We went live two weeks later. Hosting is actually free."</p>
+          </div>
+          <div class="offer-testimonial" id="t-2">
+            <div class="offer-testimonial-top">
+              <div class="offer-testimonial-avatar">DR</div>
+              <div>
+                <div class="offer-testimonial-name">David R.</div>
+                <div class="offer-testimonial-role">Lawn Care Business</div>
+              </div>
+              <div class="offer-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="offer-testimonial-text">"Auto-billing after each visit changed everything. I stopped manually invoicing 40 clients every month. Worth every penny."</p>
+          </div>
+        </div>
+
+        <div class="offer-testimonial-dots" id="testimonialDots">
+          <button class="offer-testimonial-dot active" data-idx="0"></button>
+          <button class="offer-testimonial-dot" data-idx="1"></button>
+          <button class="offer-testimonial-dot" data-idx="2"></button>
+        </div>
+      </div>
+
     </div>
-
-    <div class="offer-grid">
-      <div class="offer-item green">
-        <div class="offer-item-label">Custom Demo</div>
-        <div class="offer-item-value is-free">FREE</div>
-        <div class="offer-item-desc">A real working demo built around your business. Not a template or mockup.</div>
-      </div>
-      <div class="offer-item green2">
-        <div class="offer-item-label">Hosting</div>
-        <div class="offer-item-value is-free">Free Forever</div>
-        <div class="offer-item-desc">Your site or app stays live at no cost.</div>
-        <div class="offer-item-sub">Saving you hundreds of dollars every year.</div>
-      </div>
-      <div class="offer-item blue">
-        <div class="offer-item-label">Simple Updates</div>
-        <div class="offer-item-value">$0 to $100</div>
-        <div class="offer-item-desc">Text changes, menu edits, price updates. Small changes stay cheap.</div>
-      </div>
-    </div>
-
-    <p class="offer-note">
-      Nothing moves forward without your approval. Once you see the demo, if you want more features we agree on a price together before any work starts.
-    </p>
   </div>
 </div>
 
-<hr />
-
 <!-- IDEAS CAROUSEL -->
 <section id="ideas">
+<div class="section-inner">
   <div class="section-label">Ideas</div>
   <h2 class="section-heading">What could your app do?</h2>
   <p class="section-desc">
-    Here are some examples of what I have built and what I can build for you. Scroll through to see ideas for your industry.
+    Examples of what I can build for your industry. Click any card to book a call about it.
   </p>
 
   <div class="carousel-wrap">
+    <button class="carousel-btn" id="prev" aria-label="Scroll left">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+
     <div class="carousel" id="carousel">
 
-      <div class="c-card c-blue">
-        <div class="c-card-num">01 of 06</div>
-        <h3>Pressure Washing and Exterior Cleaning</h3>
-        <p>
-          Customers pick the service, upload a photo, and pay a deposit to lock in the date.
-          You get a full schedule without chasing anyone down by phone.
-        </p>
-        <div class="pills">
-          <span class="pill">Service selector</span>
-          <span class="pill">Photo upload</span>
-          <span class="pill">Deposit payment</span>
-          <span class="pill">Job dashboard</span>
-          <span class="pill">SMS reminders</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%);">🪣</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--blue);"></span> Exterior Cleaning</div>
+            <h3>Pressure Washing</h3>
+            <p>Customers pick a service, upload a photo, and pay a deposit to lock in the date.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">🪣</div>
+              <div class="c-card-brand-name">Deposit + job dashboard</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="c-card c-purple">
-        <div class="c-card-num">02 of 06</div>
-        <h3>Car Detailing and Auto Services</h3>
-        <p>
-          Customers pick a package, book a time, and pay through the app. For mobile details
-          they enter their address. Add-ons adjust the price automatically at checkout.
-        </p>
-        <div class="pills">
-          <span class="pill">Package selection</span>
-          <span class="pill">Time slots</span>
-          <span class="pill">Add-ons</span>
-          <span class="pill">Location input</span>
-          <span class="pill">Stripe checkout</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #1a0d3c 0%, #3a1a6e 100%);">🚗</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--purple);"></span> Auto Services</div>
+            <h3>Car Detailing</h3>
+            <p>Package selection, add-ons that adjust price at checkout, Stripe payment built in.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">🚗</div>
+              <div class="c-card-brand-name">Packages + mobile booking</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="c-card c-green">
-        <div class="c-card-num">03 of 06</div>
-        <h3>Boba Shop and Cafe Ordering</h3>
-        <p>
-          Customers order and pay upfront with full customization: sugar level, ice, toppings.
-          If the order is not picked up by end of day, the app charges double automatically.
-          No wasted product, no lost revenue.
-        </p>
-        <div class="pills">
-          <span class="pill">Custom menu</span>
-          <span class="pill">Pre-payment</span>
-          <span class="pill">No-show auto-charge</span>
-          <span class="pill">Pickup scheduling</span>
-          <span class="pill">Order queue</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #0d2e20 0%, #0f5e3a 100%);">🧋</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--green);"></span> Cafe and Drinks</div>
+            <h3>Boba Shop Ordering</h3>
+            <p>Pre-pay with full customization. No-show auto-charge means no wasted product.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">🧋</div>
+              <div class="c-card-brand-name">Custom menu + auto-charge</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="c-card c-orange">
-        <div class="c-card-num">04 of 06</div>
-        <h3>Lawn Care and Landscaping</h3>
-        <p>
-          Customers book recurring or one-time service. Billing runs automatically after each visit.
-          Digital job reports with photos go straight to the client when you finish.
-        </p>
-        <div class="pills">
-          <span class="pill">Recurring plans</span>
-          <span class="pill">Auto-billing</span>
-          <span class="pill">Photo reports</span>
-          <span class="pill">Client portal</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #1f2a0d 0%, #3a5a10 100%);">🌿</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--orange);"></span> Landscaping</div>
+            <h3>Lawn Care</h3>
+            <p>Recurring or one-time bookings with automatic billing after each visit.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">🌿</div>
+              <div class="c-card-brand-name">Recurring plans + auto-billing</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="c-card c-blue">
-        <div class="c-card-num">05 of 06</div>
-        <h3>Salon, Barber, and Beauty</h3>
-        <p>
-          Book with a specific stylist, see real prices, and pay a deposit to hold the slot.
-          Late cancellations forfeit the deposit automatically. Works for one person or a full shop.
-        </p>
-        <div class="pills">
-          <span class="pill">Stylist selection</span>
-          <span class="pill">Deposit hold</span>
-          <span class="pill">Cancellation policy</span>
-          <span class="pill">Staff calendars</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #2a0d2e 0%, #5a1a6e 100%);">✂️</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--purple);"></span> Beauty</div>
+            <h3>Salon and Barber</h3>
+            <p>Book a specific stylist, pay a deposit to hold the slot. Late cancellations forfeit automatically.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">✂️</div>
+              <div class="c-card-brand-name">Stylist booking + deposits</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="c-card c-purple">
-        <div class="c-card-num">06 of 06</div>
-        <h3>Food Truck and Pop-Up</h3>
-        <p>
-          Customers pre-order with a pickup window so you know your revenue before you even open.
-          Live location, daily menu updates, and push notifications when orders are ready.
-        </p>
-        <div class="pills">
-          <span class="pill">Pre-order system</span>
-          <span class="pill">Live location</span>
-          <span class="pill">Pickup windows</span>
-          <span class="pill">Push notifications</span>
+      <a href="#booking" class="c-card">
+        <div class="c-card-image" style="background: linear-gradient(135deg, #2a1a0d 0%, #6e3a10 100%);">🚚</div>
+        <div class="c-card-body">
+          <div>
+            <div class="c-card-tag"><span class="c-card-tag-dot" style="background:var(--orange);"></span> Pop-Up</div>
+            <h3>Food Truck</h3>
+            <p>Pre-order with pickup windows so you know your revenue before you open.</p>
+          </div>
+          <div class="c-card-footer">
+            <div class="c-card-brand">
+              <div class="c-card-brand-logo">🚚</div>
+              <div class="c-card-brand-name">Pre-orders + live location</div>
+            </div>
+            <div class="c-card-arrow">↗</div>
+          </div>
         </div>
-      </div>
+      </a>
 
     </div>
 
-    <div class="carousel-controls">
-      <button class="carousel-btn" id="prev" aria-label="Previous">&#8592;</button>
-      <button class="carousel-btn" id="next" aria-label="Next">&#8594;</button>
-      <span class="carousel-hint">Scroll or use arrows</span>
-    </div>
+    <button class="carousel-btn" id="next" aria-label="Scroll right">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
   </div>
+</div>
 </section>
 
 <hr />
 
 <!-- PAST WORK -->
 <section id="work">
+<div class="section-inner">
   <div class="section-label">Past Work</div>
   <h2 class="section-heading">Real projects, real users</h2>
   <p class="section-desc">
@@ -849,6 +1866,13 @@
         <span class="pill">UI / UX</span>
       </div>
       <span class="work-stat">Active users in the Bay Area</span>
+      <div style="margin-top: 16px;">
+        <a href="https://rishikfr.github.io/TM.github.io/" target="_blank" rel="noopener" class="btn-wrap">
+          <span class="btn-grad"></span>
+          <span class="btn-fill-bg"></span>
+          <span class="btn" style="font-size:0.8rem; padding:8px 16px;">View Live App ↗</span>
+        </a>
+      </div>
     </div>
 
     <div class="work-card wc-purple">
@@ -883,12 +1907,14 @@
     </div>
 
   </div>
+</div>
 </section>
 
 <hr />
 
 <!-- PROCESS -->
 <section id="process">
+<div class="section-inner">
   <div class="section-label">How It Works</div>
   <h2 class="section-heading">Four steps, no guesswork</h2>
   <p class="section-desc">You know what is happening at every stage and nothing starts without your approval.</p>
@@ -915,12 +1941,14 @@
       <p>Your app goes live and I walk you through it. I stay reachable for questions, fixes, and future additions.</p>
     </div>
   </div>
+</div>
 </section>
 
 <hr />
 
 <!-- WHY -->
 <section id="why">
+<div class="section-inner">
   <div class="why-row">
     <div>
       <div class="section-label">Why Work With Me</div>
@@ -950,7 +1978,7 @@
     </div>
 
     <div class="why-aside">
-      <div class="aside-title">What is included</div>
+      <div class="aside-title">Features You Could Build In</div>
       <div class="aside-item">
         <span>Custom booking or ordering system</span>
         <span class="aside-check">&#10003;</span>
@@ -976,7 +2004,7 @@
         <span class="aside-check">&#10003;</span>
       </div>
       <div class="aside-item">
-        <span>Hosting included, free forever</span>
+        <span>Hosting included, free forever <span style="color:var(--muted);font-size:0.85em;">(custom domain purchased separately by you)</span></span>
         <span class="aside-check">&#10003;</span>
       </div>
       <div class="aside-item">
@@ -984,16 +2012,224 @@
         <span class="aside-check">&#10003;</span>
       </div>
       <div style="margin-top: 24px;">
-        <a href="#booking" class="btn btn-fill" style="display:block; text-align:center;">Schedule a Free Call</a>
+        <a href="#booking" class="btn-wrap" style="width:100%;">
+          <span class="btn-grad"></span>
+          <span class="btn-fill-bg"></span>
+          <span class="btn" style="width:100%; justify-content:center;">Schedule a Free Call</span>
+        </a>
       </div>
     </div>
   </div>
+</div>
+</section>
+
+<!-- OWNER -->
+<section id="team">
+<div class="section-inner">
+  <div class="section-label">Meet the Owner</div>
+  <h2 class="section-heading">The person building your product</h2>
+  <p class="section-desc">
+    You talk directly to the developer. No account managers, no hand-offs.
+  </p>
+
+  <div class="owner-card">
+
+    <!-- Left: bio + stats -->
+    <div class="owner-left">
+      <div class="owner-avatar-wrap">
+        <div class="owner-avatar">RK</div>
+        <div>
+          <div class="owner-name">Rishik Kasula</div>
+          <div class="owner-role">Founder &amp; Developer</div>
+        </div>
+      </div>
+
+      <p class="owner-bio">
+        Builds everything end-to-end: design, frontend, backend, and hardware when needed.
+        Shipped live apps used by real students across the Bay Area, delivered paid client
+        projects, and built custom hardware-software integrations from scratch.
+        If something needs fixing after launch, you reach me directly.
+      </p>
+
+      <div class="pills" style="margin-bottom: 24px;">
+        <span class="pill">iOS / Mobile</span>
+        <span class="pill">Web</span>
+        <span class="pill">Backend</span>
+        <span class="pill">Stripe</span>
+        <span class="pill">Embedded Systems</span>
+      </div>
+
+      <div class="owner-stats">
+        <div class="owner-stat">
+          <div class="owner-stat-val blue">3+</div>
+          <div class="owner-stat-label">Shipped projects</div>
+        </div>
+        <div class="owner-stat">
+          <div class="owner-stat-val green">$0</div>
+          <div class="owner-stat-label">Hosting cost to you</div>
+        </div>
+        <div class="owner-stat">
+          <div class="owner-stat-val purple">1</div>
+          <div class="owner-stat-label">Person you deal with</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: linked projects -->
+    <div class="owner-right">
+      <div class="owner-projects-label">My Projects</div>
+      <div class="owner-projects">
+
+        <a href="https://rishikfr.github.io/TM.github.io/" target="_blank" rel="noopener" class="owner-project">
+          <div class="owner-project-icon op-icon-blue">📱</div>
+          <div class="owner-project-info">
+            <div class="owner-project-name">
+              Teacher Meter
+              <span class="owner-project-proud">Most Proud</span>
+            </div>
+            <div class="owner-project-desc">iOS app, Bay Area student grade and course tracker</div>
+          </div>
+          <span class="owner-project-arrow">↗</span>
+        </a>
+
+        <a href="#" class="owner-project" id="portfolioLink" style="opacity:0.5; pointer-events:none;">
+          <div class="owner-project-icon op-icon-purple">🗂</div>
+          <div class="owner-project-info">
+            <div class="owner-project-name">Portfolio</div>
+            <div class="owner-project-desc">Full project history, coming soon</div>
+          </div>
+          <span class="owner-project-arrow">↗</span>
+        </a>
+
+        <a href="#work" class="owner-project">
+          <div class="owner-project-icon op-icon-green">🔒</div>
+          <div class="owner-project-info">
+            <div class="owner-project-name">Smart Slide Lock</div>
+            <div class="owner-project-desc">Custom hardware + iOS remote control app</div>
+          </div>
+          <span class="owner-project-arrow">↗</span>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<hr />
+
+<!-- INTAKE FORM -->
+<section id="intake">
+<div class="section-inner">
+  <div class="section-label">Get Started</div>
+  <h2 class="section-heading">Tell me about your idea</h2>
+  <p class="section-desc">Three quick questions so I can build the right demo before we meet.</p>
+
+  <div class="intake-wrap">
+
+    <!-- Progress dots -->
+    <div class="intake-progress" id="intakeProgress">
+      <div class="intake-progress-track"><div class="intake-progress-fill" id="intakeProgressFill"></div></div>
+      <div class="intake-step-dot">
+        <div class="intake-dot active" id="dot-0"></div>
+        <span class="intake-step-label active" id="label-0">You</span>
+      </div>
+      <div class="intake-step-dot">
+        <div class="intake-dot" id="dot-1"></div>
+        <span class="intake-step-label" id="label-1">Business</span>
+      </div>
+      <div class="intake-step-dot">
+        <div class="intake-dot" id="dot-2"></div>
+        <span class="intake-step-label" id="label-2">Meeting</span>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <form id="intakeForm" action="https://formspree.io/f/mvzlzqkj" method="POST">
+        <input type="hidden" name="_subject" value="New demo request - BizInq" />
+
+        <div class="intake-card-body">
+
+          <!-- Step 1 -->
+          <div class="intake-panel visible" id="intake-step-0">
+            <div class="intake-step-title">Who are you?</div>
+            <div class="intake-step-sub">Just your name so I know who I'm meeting.</div>
+            <div class="intake-field">
+              <label for="intake-name">Your name</label>
+              <input type="text" id="intake-name" name="Name" placeholder="Jane Smith" />
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="intake-panel" id="intake-step-1">
+            <div class="intake-step-title">Tell me about your business</div>
+            <div class="intake-step-sub">What you run and what you want built.</div>
+            <div class="intake-field">
+              <label for="intake-bizname">Business name</label>
+              <input type="text" id="intake-bizname" name="Business Name" placeholder="e.g. Bay Area Mobile Detailing" />
+            </div>
+            <div class="intake-field">
+              <label for="intake-bizaddr">Business address</label>
+              <input type="text" id="intake-bizaddr" name="Business Address" placeholder="123 Main St, City, CA - or type Online" />
+            </div>
+            <div class="intake-field">
+              <label for="intake-business">What kind of business do you run?</label>
+              <input type="text" id="intake-business" name="Business Type" placeholder="e.g. Mobile car detailing, boba shop, lawn care..." />
+            </div>
+            <div class="intake-field">
+              <label for="intake-type">What do you need built?</label>
+              <select id="intake-type" name="Project Type">
+                <option value="" disabled selected>Pick one</option>
+                <option value="Booking app">Booking app</option>
+                <option value="Ordering / menu system">Ordering / menu system</option>
+                <option value="Business website">Business website</option>
+                <option value="Customer portal">Customer portal</option>
+                <option value="Something else">Something else</option>
+              </select>
+            </div>
+            <div class="intake-field">
+              <label for="intake-desc">What should it do for your customers?</label>
+              <textarea id="intake-desc" name="Description" placeholder="e.g. Let customers pick a package, choose a time, and pay a deposit upfront."></textarea>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="intake-panel" id="intake-step-2">
+            <div class="intake-step-title">When is our meeting?</div>
+            <div class="intake-step-sub">So I know how much time I have to build your demo.</div>
+            <div class="intake-field">
+              <label for="intake-meeting">Meeting date and time</label>
+              <input type="datetime-local" id="intake-meeting" name="Meeting booked for" />
+            </div>
+          </div>
+
+        </div>
+
+        <div class="intake-footer">
+          <button type="button" class="intake-btn intake-btn-back" id="intakeBack" disabled>&#8592; Back</button>
+          <span class="intake-step-counter" id="intakeCounter">Step 1 of 3</span>
+          <button type="button" class="intake-btn intake-btn-next" id="intakeNext">Next &#8594;</button>
+        </div>
+
+      </form>
+
+      <div class="intake-success" id="intakeSuccess">
+        <div class="intake-success-icon">&#10003;</div>
+        <h4>Got it.</h4>
+        <p>I'll have a demo ready before we meet.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
 </section>
 
 <hr />
 
 <!-- BOOKING -->
 <section id="booking">
+<div class="section-inner">
   <div class="section-label">Get Started</div>
   <h2 class="section-heading">Book a free 30-minute call</h2>
   <p class="section-desc">
@@ -1004,6 +2240,10 @@
   <div class="booking-card">
     <div class="booking-top">
       <div>
+        <div class="booking-platform-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Google Calendar
+        </div>
         <h3>Schedule Your Consultation</h3>
         <p>Pick any open time. We will talk through your idea and I will answer whatever questions you have.</p>
       </div>
@@ -1022,12 +2262,246 @@
       </iframe>
     </div>
   </div>
+</div>
 </section>
 
 <footer>
-  <span class="footer-name">Rishi Kasula</span>
-  <p>Custom apps and websites for local businesses. &copy; 2026</p>
+  <div class="footer-inner">
+    <span class="footer-name">Rishik Kasula</span>
+    <p>Custom apps and websites for local businesses. &copy; 2026</p>
+  </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+  (function () {
+    const canvas = document.getElementById('bg-canvas');
+
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
+
+    const scene    = new THREE.Scene();
+    const geometry = new THREE.PlaneGeometry(2, 2);
+
+    const uniforms = {
+      time:       { value: 1.0 },
+      resolution: { value: new THREE.Vector2() },
+    };
+
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: `
+        void main() {
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        precision highp float;
+        uniform vec2  resolution;
+        uniform float time;
+
+        void main(void) {
+          vec2  uv        = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+          float t         = time * 0.05;
+          float lineWidth = 0.002;
+          vec3  color     = vec3(0.0);
+
+          for (int j = 0; j < 3; j++) {
+            for (int i = 0; i < 5; i++) {
+              color[j] += lineWidth * float(i * i) /
+                abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0
+                    - length(uv) + mod(uv.x + uv.y, 0.2));
+            }
+          }
+
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `,
+    });
+
+    scene.add(new THREE.Mesh(geometry, material));
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    function resize() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      uniforms.resolution.value.set(renderer.domElement.width, renderer.domElement.height);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      uniforms.time.value += 0.05;
+      renderer.render(scene, camera);
+    })();
+  })();
+</script>
+
+<script>
+  (function () {
+    const tabs   = Array.from(document.querySelectorAll('.nav-tab'));
+    const cursor = document.getElementById('navCursor');
+    const list   = document.getElementById('navTabs');
+    if (!cursor || !list) return;
+
+    let selected = 0;
+
+    function moveTo(tab) {
+      cursor.style.left    = tab.offsetLeft + 'px';
+      cursor.style.width   = tab.offsetWidth + 'px';
+      cursor.style.opacity = '1';
+    }
+
+    // Init cursor on first tab
+    moveTo(tabs[0]);
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('mouseenter', () => moveTo(tab));
+      tab.addEventListener('click', () => { selected = i; moveTo(tab); });
+    });
+
+    list.addEventListener('mouseleave', () => moveTo(tabs[selected]));
+  })();
+</script>
+
+<script>
+  (function () {
+    const form    = document.getElementById('intakeForm');
+    const success = document.getElementById('intakeSuccess');
+    const backBtn = document.getElementById('intakeBack');
+    const nextBtn = document.getElementById('intakeNext');
+    const counter = document.getElementById('intakeCounter');
+    const fill    = document.getElementById('intakeProgressFill');
+    const totalSteps = 3;
+    let current = 0;
+
+    if (!form) return;
+
+    function getPanel(i) { return document.getElementById('intake-step-' + i); }
+    function getDot(i)   { return document.getElementById('dot-' + i); }
+    function getLabel(i) { return document.getElementById('label-' + i); }
+
+    function updateUI() {
+      // panels
+      for (let i = 0; i < totalSteps; i++) {
+        getPanel(i).classList.toggle('visible', i === current);
+        getDot(i).classList.toggle('active', i === current);
+        getDot(i).classList.toggle('done',   i < current);
+        getLabel(i).classList.toggle('active', i === current);
+      }
+      // progress bar
+      fill.style.width = (current / (totalSteps - 1) * 100) + '%';
+      // counter
+      counter.textContent = 'Step ' + (current + 1) + ' of ' + totalSteps;
+      // back
+      backBtn.disabled = current === 0;
+      // next label
+      nextBtn.textContent = current === totalSteps - 1 ? 'Send' : 'Next \u2192';
+    }
+
+    function isStepValid() {
+      if (current === 0) return document.getElementById('intake-name').value.trim() !== '';
+      if (current === 1) {
+        return document.getElementById('intake-business').value.trim() !== '' &&
+               document.getElementById('intake-type').value !== '' &&
+               document.getElementById('intake-desc').value.trim() !== '';
+      }
+      if (current === 2) return document.getElementById('intake-meeting').value !== '';
+      return true;
+    }
+
+    backBtn.addEventListener('click', () => {
+      if (current > 0) { current--; updateUI(); }
+    });
+
+    nextBtn.addEventListener('click', async () => {
+      if (!isStepValid()) {
+        // shake the card briefly
+        const card = document.querySelector('.intake-card');
+        card.style.transform = 'translateX(-6px)';
+        setTimeout(() => card.style.transform = 'translateX(6px)', 80);
+        setTimeout(() => card.style.transform = '', 160);
+        return;
+      }
+
+      if (current < totalSteps - 1) {
+        current++;
+        updateUI();
+        return;
+      }
+
+      // Submit
+      nextBtn.disabled = true;
+      nextBtn.textContent = 'Sending...';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' },
+        });
+
+        if (res.ok) {
+          form.style.display    = 'none';
+          success.style.display = 'block';
+        } else {
+          nextBtn.disabled = false;
+          nextBtn.textContent = 'Send';
+          alert('Something went wrong. Please try again.');
+        }
+      } catch {
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Send';
+        alert('Something went wrong. Please try again.');
+      }
+    });
+
+    updateUI();
+  })();
+</script>
+
+<script>
+  // Testimonial rotator
+  (function () {
+    const total = 3;
+    let current = 0;
+    let timer;
+
+    function goTo(idx) {
+      document.getElementById('t-' + current).classList.remove('active');
+      document.querySelectorAll('.offer-testimonial-dot')[current].classList.remove('active');
+      current = idx;
+      document.getElementById('t-' + current).classList.add('active');
+      document.querySelectorAll('.offer-testimonial-dot')[current].classList.add('active');
+    }
+
+    function next() { goTo((current + 1) % total); }
+
+    timer = setInterval(next, 5000);
+
+    document.querySelectorAll('.offer-testimonial-dot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(parseInt(btn.dataset.idx));
+        timer = setInterval(next, 5000);
+      });
+    });
+  })();
+
+  document.querySelectorAll('.work-card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1) + '%';
+      const y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1) + '%';
+      card.style.setProperty('--mx', x);
+      card.style.setProperty('--my', y);
+    });
+  });
+</script>
+
 
 <script>
   const carousel = document.getElementById('carousel');
